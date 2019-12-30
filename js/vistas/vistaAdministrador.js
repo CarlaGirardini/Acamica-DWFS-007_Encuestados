@@ -18,6 +18,10 @@ VistaAdministrador.prototype = {
   //lista
   inicializar: function() {
     //llamar a los metodos para reconstruir la lista, configurar botones y validar formularios
+    // Acá empieza lo que hice yo
+    this.reconstruirLista();
+    this.configuracionDeBotones();
+    // Acá termina lo que hice yo
     validacionDeFormulario();
   },
 
@@ -27,12 +31,28 @@ VistaAdministrador.prototype = {
     var nuevoItem;
     //completar
     //asignar a nuevoitem un elemento li con clase "list-group-item", id "pregunta.id" y texto "pregunta.textoPregunta"
+    // Acá empieza lo que hice yo
+    nuevoItem = $('<li>', {
+      'class' : 'list-group-item',
+      'id' : pregunta.id,
+      'text' : pregunta.textoPregunta
+    });
+    
+    // document.createElement('li');
+    // nuevoItem.className = 'list-group-item';
+    // nuevoItem.id = `${pregunta.id}`;
+    // console.log('nuevoItem antes del innerHTML', nuevoItem);
+    // $(nuevoItem).text(pregunta.textoPregunta);
+    // Acá termina lo que hice yo
     var interiorItem = $('.d-flex');
     var titulo = interiorItem.find('h5');
     titulo.text(pregunta.textoPregunta);
     interiorItem.find('small').text(pregunta.cantidadPorRespuesta.map(function(resp){
       return " " + resp.textoRespuesta;
     }));
+    console.log('nuevoItem', nuevoItem);
+    console.log('typeof nuevoItem', typeof nuevoItem);
+    console.log('$(´.d-flex´).html()', $('.d-flex').html());
     nuevoItem.html($('.d-flex').html());
     return nuevoItem;
   },
