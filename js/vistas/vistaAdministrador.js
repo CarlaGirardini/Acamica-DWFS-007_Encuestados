@@ -1,14 +1,14 @@
 /*
  * Vista administrador
  */
-var VistaAdministrador = function(modelo, controlador, elementos) {
+var VistaAdministrador = function (modelo, controlador, elementos) {
   this.modelo = modelo;
   this.controlador = controlador;
   this.elementos = elementos;
   var contexto = this;
 
   // suscripción de observadores
-  this.modelo.preguntaAgregada.suscribir(function() {
+  this.modelo.preguntaAgregada.suscribir(function () {
     contexto.reconstruirLista();
   });
 };
@@ -16,7 +16,7 @@ var VistaAdministrador = function(modelo, controlador, elementos) {
 
 VistaAdministrador.prototype = {
   //lista
-  inicializar: function() {
+  inicializar: function () {
     //llamar a los metodos para reconstruir la lista, configurar botones y validar formularios
     // Acá empieza lo que hice yo
     this.reconstruirLista();
@@ -25,58 +25,83 @@ VistaAdministrador.prototype = {
     validacionDeFormulario();
   },
 
-  
-  construirElementoPregunta: function(pregunta){
+
+  construirElementoPregunta: function (pregunta) {
     var contexto = this;
     var nuevoItem;
     //completar
     //asignar a nuevoitem un elemento li con clase "list-group-item", id "pregunta.id" y texto "pregunta.textoPregunta"
     // Acá empieza lo que hice yo
+
     nuevoItem = $('<li>', {
       'class' : 'list-group-item',
       'id' : pregunta.id,
       'text' : pregunta.textoPregunta
     });
-    
-    // document.createElement('li');
+
+    // nuevoItem = $(`<li class='list-group-item' id=${pregunta.id}> ${pregunta.textoPregunta} </li> `);
+
+    // nuevoItem = $('<li>')
+    // .addClass('list-group-item')
+    // .attr('id', pregunta.id)
+    // .text(pregunta.textoPregunta);
+
+    // nuevoItem = $('<li>').attr({
+    //   class: 'list-group-item',
+    //   id: pregunta.id,
+    //   text: pregunta.textoPregunta,
+    // });
+
+    // nuevoItem = $('<li>');
+    // nuevoItem.addClass('list-group-item');
+    // nuevoItem.attr('id', pregunta.id);
+    // nuevoItem.text(pregunta.textoPregunta);
+
+    // nuevoItem = document.createElement('li');
     // nuevoItem.className = 'list-group-item';
     // nuevoItem.id = `${pregunta.id}`;
     // console.log('nuevoItem antes del innerHTML', nuevoItem);
     // $(nuevoItem).text(pregunta.textoPregunta);
+
     // Acá termina lo que hice yo
+    
     var interiorItem = $('.d-flex');
     var titulo = interiorItem.find('h5');
     titulo.text(pregunta.textoPregunta);
-    interiorItem.find('small').text(pregunta.cantidadPorRespuesta.map(function(resp){
+    interiorItem.find('small').text(pregunta.cantidadPorRespuesta.map(function (resp) {
       return " " + resp.textoRespuesta;
     }));
-    console.log('nuevoItem', nuevoItem);
-    console.log('typeof nuevoItem', typeof nuevoItem);
-    console.log('$(´.d-flex´).html()', $('.d-flex').html());
+    // console.log('nuevoItem', nuevoItem);
+    // console.log('typeof nuevoItem', typeof nuevoItem);
+    // console.log('$(´.d-flex´).html()', $('.d-flex').html());
     nuevoItem.html($('.d-flex').html());
     return nuevoItem;
   },
 
-  reconstruirLista: function() {
+  reconstruirLista: function () {
     var lista = this.elementos.lista;
     lista.html('');
     var preguntas = this.modelo.preguntas;
-    for (var i=0;i<preguntas.length;++i){
+    for (var i = 0; i < preguntas.length; ++i) {
       lista.append(this.construirElementoPregunta(preguntas[i]));
     }
   },
 
-  configuracionDeBotones: function(){
+  configuracionDeBotones: function () {
     var e = this.elementos;
     var contexto = this;
 
     //asociacion de eventos a boton
-    e.botonAgregarPregunta.click(function() {
+    e.botonAgregarPregunta.click(function () {
       var value = e.pregunta.val();
       var respuestas = [];
-
-      $('[name="option[]"]').each(function() {
-        //completar
+      
+      $('[name="option[]"]').each(function () {
+        // Acá empieza lo que hice yo
+        // En la función agregarPregunta tendrás que pushear al arreglo de respuestas cada respuesta existente. Recordá como estaba formado el elemento respuesta en Cómo están representadas las preguntas y respuestas. Este arreglo de respuestas será el que le pases al controlador.
+        // Tip: respuesta = $(this).val(); contiene el texto de la respuesta. La cantidad de votos deberá ser seteada en 0.
+        respuestas.push({'textoRespuesta': $(this).val(), 'cantidad': 0});
+        // Acá termina lo que hice yo
       })
       contexto.limpiarFormulario();
       contexto.controlador.agregarPregunta(value, respuestas);
@@ -84,7 +109,7 @@ VistaAdministrador.prototype = {
     //asociar el resto de los botones a eventos
   },
 
-  limpiarFormulario: function(){
+  limpiarFormulario: function () {
     $('.form-group.answer.has-feedback.has-success').remove();
   },
 };
