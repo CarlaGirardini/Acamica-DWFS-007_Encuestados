@@ -12,6 +12,9 @@ var Modelo = function() {
 
   //inicializacion de eventos
   this.preguntaAgregada = new Evento(this);
+  // Acá empieza lo que hice yo
+  this.preguntaEliminada = new Evento(this);
+  // Acá termina lo que hice yo
 };
 
 Modelo.prototype = {
@@ -41,4 +44,19 @@ Modelo.prototype = {
   //se guardan las preguntas
   guardar: function(){
   },
+
+  // Acá empieza lo que hice yo
+
+  borrarPregunta: function(IDpregunta){
+    let preguntaBuscada = this.preguntas.find(preg => preg.id === IDpregunta);
+    let index = this.preguntas.indexOf(preguntaBuscada);
+    if(index!==-1){
+      this.preguntas.splice(index,1);
+      this.preguntaEliminada.notificar();
+      return this.preguntas;
+    }
+    console.error('No se encuentra la pregunta');
+  }
+  
+  // Acá termina lo que hice yo
 };

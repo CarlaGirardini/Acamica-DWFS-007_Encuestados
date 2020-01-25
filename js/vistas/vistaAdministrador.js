@@ -11,6 +11,12 @@ var VistaAdministrador = function (modelo, controlador, elementos) {
   this.modelo.preguntaAgregada.suscribir(function () {
     contexto.reconstruirLista();
   });
+  
+  // Acá empieza lo que hice yo
+  this.modelo.preguntaEliminada.suscribir(() => {
+    contexto.reconstruirLista();
+  });
+  // Acá termina lo que hice yo
 };
 
 
@@ -39,30 +45,6 @@ VistaAdministrador.prototype = {
       'text' : pregunta.textoPregunta
     });
 
-    // nuevoItem = $(`<li class='list-group-item' id=${pregunta.id}> ${pregunta.textoPregunta} </li> `);
-
-    // nuevoItem = $('<li>')
-    // .addClass('list-group-item')
-    // .attr('id', pregunta.id)
-    // .text(pregunta.textoPregunta);
-
-    // nuevoItem = $('<li>').attr({
-    //   class: 'list-group-item',
-    //   id: pregunta.id,
-    //   text: pregunta.textoPregunta,
-    // });
-
-    // nuevoItem = $('<li>');
-    // nuevoItem.addClass('list-group-item');
-    // nuevoItem.attr('id', pregunta.id);
-    // nuevoItem.text(pregunta.textoPregunta);
-
-    // nuevoItem = document.createElement('li');
-    // nuevoItem.className = 'list-group-item';
-    // nuevoItem.id = `${pregunta.id}`;
-    // console.log('nuevoItem antes del innerHTML', nuevoItem);
-    // $(nuevoItem).text(pregunta.textoPregunta);
-
     // Acá termina lo que hice yo
     
     var interiorItem = $('.d-flex');
@@ -71,9 +53,6 @@ VistaAdministrador.prototype = {
     interiorItem.find('small').text(pregunta.cantidadPorRespuesta.map(function (resp) {
       return " " + resp.textoRespuesta;
     }));
-    // console.log('nuevoItem', nuevoItem);
-    // console.log('typeof nuevoItem', typeof nuevoItem);
-    // console.log('$(´.d-flex´).html()', $('.d-flex').html());
     nuevoItem.html($('.d-flex').html());
     return nuevoItem;
   },
@@ -97,9 +76,9 @@ VistaAdministrador.prototype = {
       var respuestas = [];
       
       $('[name="option[]"]').each(function () {
-        // Acá empieza lo que hice yo
         // En la función agregarPregunta tendrás que pushear al arreglo de respuestas cada respuesta existente. Recordá como estaba formado el elemento respuesta en Cómo están representadas las preguntas y respuestas. Este arreglo de respuestas será el que le pases al controlador.
         // Tip: respuesta = $(this).val(); contiene el texto de la respuesta. La cantidad de votos deberá ser seteada en 0.
+        // Acá empieza lo que hice yo
         respuestas.push({'textoRespuesta': $(this).val(), 'cantidad': 0});
         // Acá termina lo que hice yo
       })
@@ -107,6 +86,13 @@ VistaAdministrador.prototype = {
       contexto.controlador.agregarPregunta(value, respuestas);
     });
     //asociar el resto de los botones a eventos
+
+    // Acá empieza lo que hice yo
+    e.botonBorrarPregunta.click(() => {
+      var id = parseInt($('.list-group-item.active').attr('id'));
+      contexto.controlador.borrarPregunta(id);
+    })
+    // Acá termina lo que hice yo
   },
 
   limpiarFormulario: function () {
