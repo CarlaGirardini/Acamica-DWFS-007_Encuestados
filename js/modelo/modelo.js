@@ -2,28 +2,35 @@
  * Modelo
  */
 
-// Llegó la hora de completar el modelo. Lo único que tendremos que hacer acá es implementar la funcionalidad para obtener un nuevo id. con obtenerUltimoId. Lo que debe hacer esta función es buscar el id más alto y asignar ese id a la nueva pregunta. Para hacerlo vas a tener que recorrer la lista de preguntas del modelo.
+// En este paso vas a tener que agregarle al modelo todas las funciones necesarias para manipular las preguntas y respuestas:
+// agregar respuesta
+// eliminar pregunta
+// sumarle 1 al voto de una respuesta
+// editar una pregunta
+// borrar todas las preguntas
+// o cualquier otra que te interese. Acordate que el modelo es el encargado de almacenar los datos, así que ¡a agregar funciones que se encarguen de hacer los cambios en él!
 
-//     Tip: cuidado con la primer pregunta que se agrega que no tendrá ningún id con el cual compararse. Por lo que deberá tener un valor por defecto.
-
-var Modelo = function() {
+var Modelo = function () {
   this.preguntas = [];
   this.ultimoId = 0;
+  this.cargar()
 
   //inicializacion de eventos
   this.preguntaAgregada = new Evento(this);
   // Acá empieza lo que hice yo
   this.preguntaEliminada = new Evento(this);
+  this.respuestaVotada = new Evento(this);
+  this.preguntaEditada = new Evento(this);
   // Acá termina lo que hice yo
 };
 
 Modelo.prototype = {
   //se obtiene el id más grande asignado a una pregunta
-  obtenerUltimoId: function() {
+  obtenerUltimoId: function () {
     // Acá empieza lo que hice yo
     let contadorId = 0;
-    this.preguntas.forEach(preg=>{
-      if(preg.id >= contadorId){
+    this.preguntas.forEach(preg => {
+      if (preg.id >= contadorId) {
         contadorId = preg.id;
       }
     });
@@ -32,31 +39,64 @@ Modelo.prototype = {
   },
 
   //se agrega una pregunta dado un nombre y sus respuestas
-  agregarPregunta: function(nombre, respuestas) {
+  agregarPregunta: function (nombre, respuestas) {
     var id = this.obtenerUltimoId();
     id++;
-    var nuevaPregunta = {'textoPregunta': nombre, 'id': id, 'cantidadPorRespuesta': respuestas};
+    var nuevaPregunta = { 'textoPregunta': nombre, 'id': id, 'cantidadPorRespuesta': respuestas };
     this.preguntas.push(nuevaPregunta);
     this.guardar();
     this.preguntaAgregada.notificar();
   },
 
   //se guardan las preguntas
-  guardar: function(){
+  guardar: function () {
+    // Acá empieza lo que hice yo
+    localStorage.setItem('preguntas',JSON.stringify(this.preguntas));
+    // Acá termina lo que hice yo
+  },
+
+  cargar: function() {
+    this.preguntas = JSON.parse(localStorage.getItem('preguntas'));
   },
 
   // Acá empieza lo que hice yo
 
-  borrarPregunta: function(IDpregunta){
+  borrarPregunta: function (IDpregunta) {
     let preguntaBuscada = this.preguntas.find(preg => preg.id === IDpregunta);
     let index = this.preguntas.indexOf(preguntaBuscada);
-    if(index!==-1){
-      this.preguntas.splice(index,1);
+    if (index !== -1) {
+      this.preguntas.splice(index, 1);
       this.preguntaEliminada.notificar();
       return this.preguntas;
     }
     console.error('No se encuentra la pregunta');
+  },
+
+  agregarVoto: function (nombrePregunta, respuestaSeleccionada) {
+    // sumarle 1 al voto de una respuesta
+    respuestaSeleccionada.cantidad++;
+    // nombrePregunta.cantidadPorRespuesta ++;
+    this.respuestaVotada.notificar();
+    return respuestaSeleccionada;
+  },
+
+  editarPregunta: function (IDPregunta) {
+    // editar una pregunta
+    var preguntaSeleccionada = this.preguntas.find(preg => preg.id === IDPregunta);
+    nuevoTextoPregunta = prompt('Escriba la nueva pregunta');
+    if (nuevoTextoPregunta) { 
+      preguntaSeleccionada.textoPregunta = nuevoTextoPregunta;
+      this.preguntaEditada.notificar();
+    }
+    return;
+  },
+
+  borrarTodo: function () {
+    // borrar todas las preguntas
+    this.preguntas = [];
+    this.preguntaEliminada.notificar();
+    return this.preguntas;
   }
-  
+
   // Acá termina lo que hice yo
 };

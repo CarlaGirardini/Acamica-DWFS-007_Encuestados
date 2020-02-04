@@ -17,4 +17,12 @@ var vistaUsuario = new VistaUsuario(modelo, new Controlador(modelo), {
   'nombreUsuario' : $('#nombreUsuario'),
   'graficosDeTorta' : $('#graficosDeTorta'),
 });
+
 vistaUsuario.inicializar();
+
+
+// Ejemplo de pregunta:
+// {'texto': unTexto, 'id': id, 'cantidadPorRespuesta': respuestas}
+
+// Ejemplo de respuesta:
+// {'textoRespuesta': respuesta, 'cantidad': cantVotos}
