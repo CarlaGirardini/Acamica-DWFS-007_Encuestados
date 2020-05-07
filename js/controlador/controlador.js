@@ -1,8 +1,6 @@
 /*
  * Controlador
  */
-
-
 var Controlador = function(modelo) {
   this.modelo = modelo;
 };
@@ -12,7 +10,6 @@ Controlador.prototype = {
       this.modelo.agregarPregunta(pregunta, respuestas);
   },
 
-  // Acá empieza lo que hice yo
   borrarPregunta: function(IDpregunta) {
     this.modelo.borrarPregunta(IDpregunta);
   },
@@ -28,5 +25,4 @@ Controlador.prototype = {
   borrarTodo: function(){
     this.modelo.borrarTodo();
   }
-  // Acá termina lo que hice yo
 };

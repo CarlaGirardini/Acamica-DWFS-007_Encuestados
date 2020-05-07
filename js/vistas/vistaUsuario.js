@@ -11,6 +11,15 @@ var VistaUsuario = function(modelo, controlador, elementos) {
   this.modelo.preguntaAgregada.suscribir(function() {
     contexto.reconstruirLista();
   });
+  this.modelo.preguntaEliminada.suscribir(() => {
+    contexto.reconstruirLista();
+  });
+  this.modelo.respuestaVotada.suscribir(() => {
+    contexto.reconstruirGrafico();
+  });
+  this.modelo.preguntaEditada.suscribir(() => {
+    contexto.reconstruirLista();
+  });
 };
 
 VistaUsuario.prototype = {
@@ -51,6 +60,20 @@ VistaUsuario.prototype = {
     preguntas.forEach(function(clave){
       //completar
       //agregar a listaPreguntas un elemento div con valor "clave.textoPregunta", texto "clave.textoPregunta", id "clave.id"
+
+      // Primero elimino el template de las respuestas, que es el último elemento del array (solo si está vacío)
+
+      if(!clave.cantidadPorRespuesta[clave.cantidadPorRespuesta.length - 1].textoRespuesta){
+        clave.cantidadPorRespuesta.pop();
+      }
+
+      listaPreguntas.append($('<div>', {
+        id: clave.id,
+        value: clave.textoPregunta,
+        text: clave.textoPregunta,
+      }));
+
+
       var respuestas = clave.cantidadPorRespuesta;
       contexto.mostrarRespuestas(listaPreguntas,respuestas, clave);
     })
@@ -84,12 +107,14 @@ VistaUsuario.prototype = {
 
   dibujarGrafico: function(nombre, respuestas){
     var seVotoAlgunaVez = false;
+    var graficosYaDibujados = [];
     for(var i=1;i<respuestas.length;++i){
       if(respuestas[i][1]>0){
         seVotoAlgunaVez = true;
       }
     }
     var contexto = this;
+    graficosYaDibujados.push(nombre);
     google.charts.load("current", {packages:["corechart"]});
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
